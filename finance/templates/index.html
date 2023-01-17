@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage.
+{% endblock %}
+
+{% block main %}
+
+<h1>{{ username }}'s Portfolio.</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th colspan="5"><h2>Cash Balance: {{ cash_current | usd }}</h2></th>
+        </tr>
+        <tr>
+            <th>Company Name</th>
+            <th>Stock Symbol</th>
+            <th>Shares</th>
+            <th>Current Price</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if any_shares > 0 %}
+        {% for s in portfolio %}
+            <tr>
+                <td>{{ s.company_name }}</td>
+                <td>{{ s.symbol }}</td>
+                <td>{{ s.shares }}</td>
+                <td>{{ s.price_current | usd }}</td>
+                <td>{{ s.value | usd }}</td>
+            </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="5">No shares owned</td>
+        </tr>
+        {% endif %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5"><h2>Total Value of Stocks and Cash: {{ total_value | usd }}</h2></td>
+        </tr>
+    </tfoot>
+</table>
+
+
+{% endblock %}

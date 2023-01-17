@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Calc.
+{% endblock %}
+
+{% block main %}
+<form action="/buy" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="symbol" placeholder="Stock Symbol" type="text">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="shares" placeholder="Number" type="text">
+    </div>
+    <h3></h3>
+    <button class="btn btn-primary" type="submit">Buy</button>
+</form>
+<script>
+
+    let price = 0
+    let input = document.querySelectorAll('input')
+    input[0].addEventListener('input', async function() {
+            let response = await fetch('/search?q=' + input[0].value);
+            price = await response.json();
+            console.log(price)
+        });
+    input[1].addEventListener('input', async function() {
+        let number = input[1].value
+        document.querySelector('h3').innerHTML = 'You are going to spend: $' + price * number
+    });
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell.
+{% endblock %}
+
+{% block main %}
+
+<h1>Sell shares.</h1>
+<h6>Cash Balance: {{ cash_before | usd }}</h6>
+<h6 hidden>Cash Balance: {{ cash_before }}</h6>
+<form action="/sell" method="post">
+    <div class="mb-3">
+        <select autofocus class="form-control mx-auto w-auto" name="symbol">
+            <option disabled selected>Select Symbol</option>
+            {% for i in symbols %}
+            <option>{{ i.symbol }}</option>
+            {% endfor %}
+        </select>
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="shares" placeholder="Number" type="text">
+    </div>
+    <h6></h6>
+    <h6></h6>
+    <button class="btn btn-primary" type="submit">Sell</button>
+</form>
+<script>
+
+    let price = 0, number = 0
+    let select = document.querySelector('select')
+    let h6 = document.querySelectorAll('h6')
+    let cash_before = parseFloat(h6[1].innerHTML.slice(14))
+    console.log(h6[1].innerHTML.slice(14))
+    console.log(cash_before)
+    select.addEventListener('change', async function() {
+        let response = await fetch('/search?q=' + select.value);
+        price = await response.json();
+        multi = price * number
+        h6[2].innerHTML = 'You are going to earn: $' + multi.toFixed(2)
+        cash_after = cash_before + price * number
+        h6[3].innerHTML = 'Expected Balance after sale: $' + cash_after.toFixed(2)
+        console.log(cash_after)
+    });
+
+    let input = document.querySelector('input')
+    input.addEventListener('input', async function() {
+        number = input.value
+        multi = price * number
+        h6[2].innerHTML = 'You are going to earn: $' + multi.toFixed(2)
+        cash_after = cash_before + price * number
+        h6[3].innerHTML = 'Expected Balance after sale: $' + cash_after.toFixed(2)
+        console.log(cash_after)
+    });
+
+</script>
+
+{% endblock %}

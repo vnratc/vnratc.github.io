@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Buy.
+{% endblock %}
+
+{% block main %}
+
+<h1>Buy shares.</h1>
+<h6>Cash Balance: {{ cash_before | usd }}</h6>
+<h6 hidden>Cash Balance: {{ cash_before }}</h6>
+<form action="/buy" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="symbol" placeholder="Stock Symbol" type="text">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="shares" placeholder="Number" type="text">
+    </div>
+    <h6></h6>
+    <h6></h6>
+    <button class="btn btn-primary" type="submit">Buy</button>
+</form>
+<script>
+
+    let price = 0, number = 0
+    let input = document.querySelectorAll('input')
+    let h6 = document.querySelectorAll('h6')
+    let cash_before = parseFloat(h6[1].innerHTML.slice(14))
+    input[0].addEventListener('input', async function() {
+        let response = await fetch('/search?q=' + input[0].value);
+        price = await response.json();
+        multi = price * number
+        h6[2].innerHTML = 'You are going to spend: $' + multi.toFixed(2)
+        cash_after = cash_before - price * number
+        h6[3].innerHTML = 'Expected Balance after purchase: $' + cash_after.toFixed(2)
+    });
+    input[1].addEventListener('input', async function() {
+        number = input[1].value
+        multi = price * number
+        h6[2].innerHTML = 'You are going to spend: $' + multi.toFixed(2)
+        cash_after = cash_before - price * number
+        h6[3].innerHTML = 'Expected Balance after purchase: $' + cash_after.toFixed(2)
+    });
+
+</script>
+
+{% endblock %}
